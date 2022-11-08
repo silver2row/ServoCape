@@ -5,4 +5,4 @@ ServoCape for the BeagleBone Black
 As the saying goes, this may be dangerous and/or habit forming.
 
 Please use caution while attempting to handle the ServoCape and BeagleBone Black.
-` There is not excuse for not using safety! `
+` There is no excuse for not using safety! `
