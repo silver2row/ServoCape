@@ -13,3 +13,9 @@ Also, I take no responsibility for your endeavors, actions, or your lack of thou
 
 # AGAIN
 ` be careful and stay cautious `
+
+# Update
+If you have not noticed, there is a server, a Flask Server, in the src file to run called pwmsOne.py. 
+That file needs a /templates directory and an HTML file in it to handle such an instance...
+
+Please review flask and HTML to handle the file!
