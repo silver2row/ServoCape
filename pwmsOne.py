@@ -9,7 +9,7 @@ from flask import Flask, render_template
 servos = ServoCtrl("/dev/bone/i2c/2", 0x7f, 50)
 
 # add a servo to controller, using channel 0.  servo max rotation is 90 degrees;
-servos.add_servo("1a", 0, 90)
+servos.add_servo("1a", 0, 180)
 
 # add a servo to controller, using channel 15.  servo max rotation is 90 degrees;
 
@@ -36,21 +36,21 @@ def updates(state = None):
 #    for l in range(0, 4):
     # Move Servo(s) to angle 2
     if state == "0":
-        servos.set_servo_angle("1a", 2)
+        servos.set_servo_angle("1a", 0)
         sleep(1)
-        servos.set_servo_angle("1b", 2)
+        servos.set_servo_angle("1b", 0)
         sleep(1)
-        servos.set_servo_angle("2c", 2)
+        servos.set_servo_angle("2c", 0)
         sleep(1)
-        servos.set_servo_angle("2d", 2)
+        servos.set_servo_angle("2d", 0)
         sleep(1)
-        servos.set_servo_angle("3e", 2)
+        servos.set_servo_angle("3e", 0)
         sleep(1)
-        servos.set_servo_angle("3f", 2)
+        servos.set_servo_angle("3f", 0)
         sleep(1)
-        servos.set_servo_angle("4g", 2)
+        servos.set_servo_angle("4g", 0)
         sleep(1)
-        servos.set_servo_angle("4h", 2)
+        servos.set_servo_angle("4h", 0)
         sleep(1)
 
     # servos.set_servo_angle("another servo",servos.get_servo_max_angle("another servo")/2)
