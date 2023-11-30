@@ -6,23 +6,23 @@ from flask import Flask, render_template
 
 # create instance of ServoCtrl on i2c bus 2 at address 64 using 60hz pwm frequency.
 # change 64 to 0x7f for servo cape
-servos = ServoCtrl(1, 0x7f, 50)
+servos = ServoCtrl("/dev/bone/i2c/2", 0x7f, 50)
 
 # add a servo to controller, using channel 0.  servo max rotation is 90 degrees;
 servos.add_servo("1a", 0, 90)
 
 # add a servo to controller, using channel 15.  servo max rotation is 90 degrees;
 
-servos.add_servo("1b", 1, 90)
+servos.add_servo("1b", 1, 180)
 
-servos.add_servo("2c", 3, 90)
-servos.add_servo("2d", 4, 90)
+servos.add_servo("2c", 3, 180)
+servos.add_servo("2d", 4, 180)
 
-servos.add_servo("3e", 6, 90)
-servos.add_servo("3f", 7, 90)
+servos.add_servo("3e", 6, 180)
+servos.add_servo("3f", 7, 180)
 
-servos.add_servo("4g", 9, 90)
-servos.add_servo("4h", 10, 90)
+servos.add_servo("4g", 9, 180)
+servos.add_servo("4h", 10, 180)
 
 servos.enablePWMs(True)
 
@@ -75,21 +75,21 @@ def updates(state = None):
 
     # move servo3 to max rotation of 90 degrees
     if state == "max":
-        servos.set_servo_percent("1a", 90)
+        servos.set_servo_percent("1a", 180)
         sleep(1)
-        servos.set_servo_percent("1b", 90)
+        servos.set_servo_percent("1b", 180)
         sleep(1)
-        servos.set_servo_percent("2c", 90)
+        servos.set_servo_percent("2c", 180)
         sleep(1)
-        servos.set_servo_percent("2d", 90)
+        servos.set_servo_percent("2d", 180)
         sleep(1)
-        servos.set_servo_percent("3e", 90)
+        servos.set_servo_percent("3e", 180)
         sleep(1)
-        servos.set_servo_percent("3f", 90)
+        servos.set_servo_percent("3f", 180)
         sleep(1)
-        servos.set_servo_percent("4g", 90)
+        servos.set_servo_percent("4g", 180)
         sleep(1)
-        servos.set_servo_percent("4h", 90)
+        servos.set_servo_percent("4h", 180)
         sleep(1)
 
 #        servos.set_servo_angle("1a", servos.get_servo_max_angle("1a"))
