@@ -1,3 +1,9 @@
+# This Servo Cape additions for the BBAI-64 and BBB from beagleboard.org may or may not work
+
+## I have recently, 01/2024, tried to make it work and have failed
+
+### Something changed that is not known to me...I am sorry
+
 # ServoCape
 This is some Servo Cape additions made for the BBB and BBAI-64.
 
