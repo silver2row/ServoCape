@@ -22,12 +22,12 @@ class ServoCtrl:
         self.servos = {}
         self.set_pwm_frequency(frequency)
         self.bit_time = 1.0 / (self.frequency * 4096.0)
-        set_pin = Path("/sys/class/gpio/gpio68/direction")    # handling pathlib fd output instance
-        set_pin.write_text("out")
+#        set_pin = Path("/sys/class/leds/pca9685-enable/brightness")    # handling pathlib fd output instance
+#        set_pin.write_text("0")
 
 
     def enablePWMs(self, en):
-        set_pin = Path("/sys/class/gpio/gpio68/value")
+        set_pin = Path("/sys/class/leds/pca9685-enable/brightness")
         if en:
             set_pin.write_text("0")
         else:
