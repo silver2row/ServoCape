@@ -59,7 +59,7 @@ class PCA9685:
       reg = All_LED
     else:
       assert output in range(0, 16)
-      reg = LED +4 * output
+      reg = LED + 4 * output
 
     on  = phase
     off = (duty + phase) & 0xfff
