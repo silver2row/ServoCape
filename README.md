@@ -1,14 +1,15 @@
-# This Servo Cape additions for the BBAI-64 and BBB from beagleboard.org may or may not work
+# This Servo Cape for the BBAI-64 and the BBB from beagleboard.org
 
-## I have recently, 01/2024, tried to make it work and have failed
+### I have recently, 01/2024, tried to make it work and have failed
 
 ### Something changed that is not known to me...I am sorry
 
 # ServoCape
 This is some Servo Cape additions made for the BBB and BBAI-64.
 
-# Ideas about Bullseye because Bookworm will need a Virtual Environment for python3 -m pip install smbus2
-1. Get an image from beagleboard.org for a Debian Bullseye Distro w/ all the fixings.
+### Ideas about Bullseye because Bookworm will need a Virtual Environment for python3 -m pip install smbus2
+
+1. Get an image from beagleboard.org for a Debian Bullseye Distro or another one.
 2. Make sure it is the minimal flasher image...
 3. Here is a location where you can grab the image...
    a. https://forum.beagleboard.org/t/arm64-debian-11-x-bullseye-monthly-snapshots-2023-10-07/32318
@@ -19,9 +20,6 @@ This is some Servo Cape additions made for the BBB and BBAI-64.
 7. If that is not working, try `/dev/i2c-5`.
 8. Add your favorite server and a `/templates/` dir. w/ a file called whatever you wish...
 9. Make sure that pwmsOne.py has the same .html file listed as what you will call the .html file in `/ServoCape/templates/Your_File.html`.
-
-Please use caution while attempting to handle the ServoCape and BeagleBone Black.
-` There is no excuse for not using safety! `
 
 Also...Bookworm has some ideas relating to the OS itself that plays a bit differently compared to Bullseye.
 
@@ -38,13 +36,9 @@ This means...
 
 License: GPL v3 which can be found here: ` https://www.gnu.org/licenses/gpl-3.0.en.html `
 
-Also, I take no responsibility for your endeavors, actions, or your lack of thought out processes. 
-
-# AGAIN
-` be careful and stay cautious `
-
 # Update
 If you have not noticed, there is a server, a Flask Server, in the src file to run called pwmsOne.py. 
 That file needs a /templates directory and an HTML file in it to handle such an instance...
 
+# Flask
 Please review flask and HTML to handle the file!
