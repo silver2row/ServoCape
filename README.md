@@ -6,6 +6,7 @@
 
 # ServoCape
 This is some Servo Cape additions made for the BBB and BBAI-64.
+Testing Image: https://www.beagleboard.org/distros/am335x-11-7-2023-09-02-4gb-microsd-iot
 
 ### Ideas about Bullseye because Bookworm will need a Virtual Environment for python3 -m pip install smbus2
 
