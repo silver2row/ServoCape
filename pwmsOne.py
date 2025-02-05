@@ -113,7 +113,7 @@ try:
 #    template_data = {
 #        "title" : state,
 #    }
-#    return render_template("ServoOne.html", **template_data)
+#    return render_template("server_one.html", **template_data)
 
     else:
         servos.enablePWMs("0")
