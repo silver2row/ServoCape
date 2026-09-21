@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4 DoF Arm & Macro Panel</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f0f2f5; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .card { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 450px; margin-bottom: 20px; }
+        h2 { color: #2c3e50; font-size: 20px; margin-top: 0; text-align: center; }
+        .joint-row { margin-bottom: 15px; }
+        .joint-label { display: flex; justify-content: space-between; font-weight: bold; color: #34495e; text-transform: capitalize; }
+        .slider { width: 100%; height: 8px; border-radius: 5px; background: #ddd; -webkit-appearance: none; outline: none; }
+        .slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #3498db; cursor: pointer; }
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        button { flex: 1; padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; background: #34495e; color: white; }
+        button.primary { background: #2ecc71; }
+        button.danger { background: #e74c3c; }
+        input[type=text], select { width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .status { font-size: 12px; color: #7f8c8d; text-align: center; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<!-- Manual Controls Block -->
+<div class="card">
+    <h2>Manual Joint Controls</h2>
+    {% for name, details in joints.items() %}
+    <div class="joint-row">
+        <div class="joint-label">
+            <span>{{ name }}</span>
+            <span id="val-{{ name }}">{{ details.angle }}°</span>
+        </div>
+        <input type="range" class="slider" min="0" max="180" value="{{ details.angle }}" 
+               oninput="transmitMove('{{ name }}', this.value)">
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Recording Dashboard Block -->
+<div class="card">
+    <h2>Macro Recorder</h2>
+    <input type="text" id="macro-name" placeholder="Name your macro (e.g., PickAndPlace)">
+    <div class="btn-group">
+        <button onclick="captureFrame()">Record Step</button>
+        <button class="primary" onclick="saveMacroSequence()">Save Macro</button>
+        <button class="danger" onclick="clearBuffer()">Reset Steps</button>
+    </div>
+    <div class="status" id="record-status">0 steps recorded in buffer.</div>
+</div>
+
+<!-- Playback Control Block -->
+<div class="card">
+    <h2>Macro Playback</h2>
+    <label for="macro-select">Choose Sequence</label>
+    <select id="macro-select">
+        {% for macro in macros %}
+        <option value="{{ macro }}">{{ macro }}</option>
+        {% endfor %}
+    </select>
+    <div style="display: flex; gap:10px; align-items: center;">
+        <label><input type="checkbox" id="loop-check"> Continuous Loop</label>
+    </div>
+    <div class="btn-group">
+        <button class="primary" onclick="startPlayback()">Run</button>
+        <button class="danger" onclick="stopPlayback()">Emergency Stop</button>
+    </div>
+</div>
+
+<script>
+    let currentSequenceBuffer = [];
+
+    function transmitMove(jointName, angleValue) {
+        document.getElementById('val-' + jointName).innerText = angleValue + '°';
+        fetch('/api/move', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ joint: jointName, angle: parseInt(angleValue) })
+        });
+    }
+
+    function captureFrame() {
+        // Fetch current active angles from the backend state machine
+        fetch('/api/snapshot')
+        .then(res => res.json())
+        .then(snapshot => {
+            currentSequenceBuffer.push(snapshot);
+            document.getElementById('record-status').innerText = `${currentSequenceBuffer.length} steps recorded in buffer.`;
+        });
+    }
+
+    function clearBuffer() {
+        currentSequenceBuffer = [];
+        document.getElementById('record-status').innerText = "0 steps recorded in buffer.";
+    }
+
+    function saveMacroSequence() {
+        const name = document.getElementById('macro-name').value.trim();
+        if(!name || currentSequenceBuffer.length === 0) {
+            alert("Ensure you have set a name and recorded at least 1 step.");
+            return;
+        }
+
+        fetch('/api/macro/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name, frames: currentSequenceBuffer })
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(`Macro "${name}" saved!`);
+            clearBuffer();
+            
+            // Re-populate select element
+            const dropdown = document.getElementById('macro-select');
+            dropdown.innerHTML = '';
+            data.macros.forEach(m => {
+                let opt = document.createElement('option');
+                opt.value = m; opt.innerText = m;
+                dropdown.appendChild(opt);
+            });
+        });
+    }
+
+    function startPlayback() {
+        const selectedMacro = document.getElementById('macro-select').value;
+        const isLooping = document.getElementById('loop-check').checked;
+        if(!selectedMacro) return;
+
+        fetch('/api/macro/play', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: selectedMacro, loop: isLooping, delay: 0.6 })
+        });
+    }
+
+    function stopPlayback() {
+        fetch('/api/macro/stop', { method: 'POST' });
+    }
+</script>
+</body>
+</html>

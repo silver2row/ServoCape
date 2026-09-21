@@ -104,5 +104,7 @@ class ServoCtrl:
         if angle >=0 and angle <= self.servos[name].max_angle:
             self.servos[name].angle=angle
             # calculate pulse time based on min & max values.
-            high = self.servos[name].min_value + int((self.servos[name].max_value - self.servos[name].min_value) * self.servos[name].angle / self.servos[name].max_angle)
+            high = self.servos[name].min_value + 
+                   int((self.servos[name].max_value - self.servos[name].min_value) * 
+                   self.servos[name].angle / self.servos[name].max_angle)
             self._set_servo_angle(self.servos[name].channel, high)

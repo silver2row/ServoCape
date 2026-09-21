@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4 DoF Arm Controller</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        .joint-row {
+            margin-bottom: 25px;
+        }
+        .joint-label {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            color: #34495e;
+            text-transform: capitalize;
+            margin-bottom: 5px;
+        }
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3498db;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>4 DoF Robotic Arm Panel</h1>
+
+    <!-- Loop dynamically through joints passed by Flask backend dictionary -->
+    {% for name, details in joints.items() %}
+    <div class="joint-row">
+        <div class="joint-label">
+            <span>{{ name }} (CH {{ details.channel }})</span>
+            <span id="val-{{ name }}">{{ details.angle }}°</span>
+        </div>
+        <input type="range" class="slider" min="0" max="180" value="{{ details.angle }}" 
+               oninput="transmitMove('{{ name }}', this.value)">
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    function transmitMove(jointName, angleValue) {
+        // Update label instantly in the browser window
+        document.getElementById('val-' + jointName).innerText = angleValue + '°';
+
+        // Stream JSON position coordinate data back to Flask backend smoothly
+        fetch('/api/move', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                joint: jointName,
+                angle: parseInt(angleValue)
+            })
+        })
+        .then(response => response.json())
+        .catch(err => console.error("Communication error with robotic arm hardware:", err));
+    }
+</script>
+
+</body>
+</html>
